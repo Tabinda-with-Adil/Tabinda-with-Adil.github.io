@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Royal Wedding Invitation</title>
-  
-  <!-- Premium Fonts -->
+  <title>Tabinda & Adil | Wedding Invitation</title>
+
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #0a1122;
-      --card-bg: #101c34;
+      --bg-midnight: #080d1a;
+      --card-noir: #0e172a;
       --gold-primary: #d4af37;
       --gold-light: #f7e7ce;
-      --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-      --text-main: #fcfcfc;
-      --text-muted: #9aa8be;
+      --gold-gradient: linear-gradient(135deg, #c5a059 0%, #fef3c7 45%, #b38728 70%, #d4af37 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * {
@@ -29,13 +29,14 @@
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-midnight);
       color: var(--text-main);
       font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       overflow-x: hidden;
+      perspective: 1200px;
     }
 
     /* Floating Music Toggle */
@@ -46,7 +47,7 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: rgba(10, 17, 34, 0.85);
+      background: rgba(14, 23, 42, 0.85);
       border: 1.5px solid var(--gold-primary);
       color: var(--gold-light);
       font-size: 1.1rem;
@@ -54,185 +55,196 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 1000;
+      z-index: 1100;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       transition: transform 0.2s;
     }
     .music-btn.playing {
-      animation: pulse 1.8s infinite;
+      animation: musicPulse 1.8s infinite;
     }
-    @keyframes pulse {
+    @keyframes musicPulse {
       0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6); }
       70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
       100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
     }
 
-    /* --- 3D DOOR OVERLAY --- */
-    .door-wrapper {
+    /* =========================================
+       3D ENVELOPE FLAP COVER (NO SHUTTER DOORS)
+       ========================================= */
+    .cover-overlay {
       position: fixed;
       inset: 0;
-      z-index: 900;
+      z-index: 1000;
+      background: rgba(4, 7, 15, 0.95);
       display: flex;
-      perspective: 1200px;
-      transition: visibility 1.2s ease;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.8s ease 0.5s, visibility 0.8s ease 0.5s;
     }
-    .door-wrapper.opened {
+    .cover-overlay.opened {
+      opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
-    .door {
-      width: 50%;
-      height: 100%;
-      background: radial-gradient(circle at center, #13223f, #09101f);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    .envelope-card {
+      width: 100%;
+      max-width: 360px;
+      height: 480px;
+      background: linear-gradient(160deg, #131d33, #0a101f);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 12px;
       position: relative;
-      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
-    }
-    .door-left {
-      transform-origin: left center;
-      border-right: 1px solid rgba(212, 175, 55, 0.4);
-    }
-    .door-right {
-      transform-origin: right center;
-      border-left: 1px solid rgba(212, 175, 55, 0.4);
-    }
-    .door-wrapper.opened .door-left {
-      transform: rotateY(-105deg);
-    }
-    .door-wrapper.opened .door-right {
-      transform: rotateY(105deg);
-    }
-
-    /* Center Seal on the Doors */
-    .door-seal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 950;
+      perspective: 1000px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
-      pointer-events: auto;
-      transition: opacity 0.5s ease;
-      width: 90%;
-      max-width: 320px;
-    }
-    .door-wrapper.opened .door-seal {
-      opacity: 0;
-      pointer-events: none;
+      padding: 30px 20px;
+      overflow: visible;
     }
 
-    .seal-circle {
-      width: 90px;
-      height: 90px;
+    /* 3D Top Flap that folds upward */
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(135deg, #182542, #0d1629);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+      transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+      z-index: 10;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+    .cover-overlay.opened .envelope-flap {
+      transform: rotateX(175deg);
+    }
+
+    .monogram-seal {
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       background: var(--gold-gradient);
+      color: #0b1120;
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #0b132b;
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-      margin-bottom: 20px;
+      box-shadow: 0 0 22px rgba(212, 175, 55, 0.55);
+      margin-bottom: 22px;
+      z-index: 5;
     }
 
-    .seal-title {
+    .cover-couple {
       font-family: 'Great Vibes', cursive;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       color: var(--gold-light);
-      margin-bottom: 8px;
+      line-height: 1.2;
+      z-index: 5;
     }
 
-    .seal-subtitle {
+    .cover-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      margin: 14px 0 28px;
+      z-index: 5;
+    }
+
+    .tap-open-btn {
+      padding: 12px 28px;
+      background: rgba(10, 17, 34, 0.9);
+      border: 1.5px solid var(--gold-primary);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
       font-size: 0.8rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 25px;
-    }
-
-    .open-btn {
-      padding: 12px 28px;
-      border: 1.5px solid var(--gold-primary);
-      background: rgba(16, 28, 52, 0.8);
-      color: var(--gold-light);
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
       border-radius: 30px;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-      transition: all 0.3s;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+      transition: transform 0.2s, background 0.2s;
+      z-index: 5;
+      animation: buttonFloat 2s ease-in-out infinite;
     }
-    .open-btn:active {
+    @keyframes buttonFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .tap-open-btn:active {
       transform: scale(0.95);
       background: var(--gold-primary);
       color: #000;
     }
 
-    /* --- INVITATION CONTAINER --- */
-    .main-container {
+    /* =========================================
+       MAIN INVITATION BODY
+       ========================================= */
+    .main-wrapper {
       width: 100%;
       max-width: 480px;
-      padding: 40px 20px 80px;
+      padding: 50px 20px 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
     }
 
-    .ornament {
+    .ornament-divider {
       color: var(--gold-primary);
-      font-size: 1.2rem;
+      font-size: 1rem;
       letter-spacing: 6px;
-      margin: 15px 0;
+      margin: 14px 0;
     }
 
-    .header-subtitle {
+    .section-eyebrow {
       font-family: 'Cinzel', serif;
       font-size: 0.75rem;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold-primary);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .couple-title {
+    .couple-main-title {
       font-family: 'Great Vibes', cursive;
-      font-size: 3.5rem;
+      font-size: 3.6rem;
       color: var(--gold-light);
-      line-height: 1.1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      line-height: 1.15;
     }
-    .and-sym {
+
+    .names-ampersand {
       font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--gold-primary);
       display: block;
-      margin: 5px 0;
+      margin: 4px 0;
     }
 
-    /* Frame Card */
-    .card-frame {
+    /* Luxury Frame Containers */
+    .luxury-card {
       width: 100%;
-      background: var(--card-bg);
-      border: 1px solid rgba(212, 175, 55, 0.4);
+      background: var(--card-noir);
+      border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 12px;
-      padding: 24px 18px;
-      margin: 25px 0;
+      padding: 24px 20px;
+      margin: 20px 0;
       position: relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    .card-frame::before {
+    .luxury-card::before {
       content: '';
       position: absolute;
       inset: 6px;
@@ -241,23 +253,22 @@
       pointer-events: none;
     }
 
-    /* --- SCRATCH SECTION --- */
-    .scratch-wrapper {
+    /* Scratch-to-Reveal Card */
+    .scratch-box {
       position: relative;
       width: 100%;
       max-width: 320px;
       height: 180px;
-      margin: 20px auto;
+      margin: 18px auto 0;
       border-radius: 8px;
       overflow: hidden;
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      border: 1px solid rgba(212, 175, 55, 0.4);
     }
 
-    .scratch-secret {
+    .scratch-underlay {
       position: absolute;
       inset: 0;
-      background: #0d172a;
+      background: #091122;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -265,20 +276,19 @@
       padding: 15px;
       z-index: 1;
     }
-    .scratch-secret h4 {
+    .scratch-underlay h4 {
       font-family: 'Cinzel', serif;
       color: var(--gold-primary);
-      font-size: 1rem;
-      letter-spacing: 1px;
+      font-size: 0.95rem;
     }
-    .scratch-secret .date {
-      font-size: 1.3rem;
+    .scratch-underlay .event-date {
+      font-size: 1.25rem;
       font-weight: 600;
       color: var(--gold-light);
       margin: 5px 0;
     }
-    .scratch-secret p {
-      font-size: 0.8rem;
+    .scratch-underlay p {
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
@@ -287,30 +297,30 @@
       inset: 0;
       z-index: 2;
       touch-action: none;
-      cursor: grab;
+      cursor: pointer;
     }
 
-    /* --- COUNTDOWN TIMER --- */
-    .countdown-grid {
+    /* Countdown Grid */
+    .timer-container {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin: 20px 0;
+      gap: 10px;
+      margin-top: 18px;
     }
-    .time-box {
-      background: rgba(10, 17, 34, 0.7);
+    .timer-cell {
+      background: rgba(8, 13, 26, 0.8);
       border: 1px solid rgba(212, 175, 55, 0.3);
       padding: 10px 12px;
       border-radius: 8px;
-      min-width: 65px;
+      min-width: 64px;
     }
-    .time-num {
+    .timer-val {
       font-family: 'Cinzel', serif;
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--gold-light);
     }
-    .time-label {
+    .timer-lbl {
       font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -318,150 +328,176 @@
       margin-top: 4px;
     }
 
-    /* --- PROGRAM TIMELINE --- */
-    .timeline {
-      width: 100%;
-      margin-top: 15px;
+    /* Program Timeline */
+    .timeline-list {
       text-align: left;
+      margin-top: 15px;
     }
-    .timeline-item {
+    .timeline-row {
       position: relative;
-      padding-left: 28px;
+      padding-left: 26px;
       margin-bottom: 20px;
     }
-    .timeline-item::before {
+    .timeline-row::before {
       content: '';
       position: absolute;
       left: 6px;
       top: 4px;
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--gold-primary);
       box-shadow: 0 0 6px var(--gold-primary);
     }
-    .timeline-item::after {
+    .timeline-row::after {
       content: '';
       position: absolute;
-      left: 9.5px;
-      top: 16px;
-      bottom: -16px;
+      left: 9px;
+      top: 15px;
+      bottom: -15px;
       width: 1px;
-      background: rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.25);
     }
-    .timeline-item:last-child::after {
+    .timeline-row:last-child::after {
       display: none;
     }
-    .event-title {
+    .row-title {
       font-family: 'Cinzel', serif;
       font-size: 0.95rem;
       color: var(--gold-light);
     }
-    .event-time {
+    .row-time {
       font-size: 0.75rem;
       color: var(--gold-primary);
       font-weight: 500;
       margin: 2px 0;
     }
-    .event-desc {
+    .row-desc {
       font-size: 0.75rem;
       color: var(--text-muted);
+    }
+
+    /* Venue & Map Action */
+    .venue-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 22px;
+      border: 1px solid var(--gold-primary);
+      border-radius: 25px;
+      background: transparent;
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .venue-btn:hover {
+      background: var(--gold-primary);
+      color: #0b1120;
     }
   </style>
 </head>
 <body>
 
-  <!-- Floating Audio Button -->
+  <!-- Floating Audio Player -->
   <button id="musicBtn" class="music-btn" aria-label="Toggle Music">🎵</button>
   <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- 3D Door Reveal Screen -->
-  <div id="doorWrapper" class="door-wrapper">
-    <div class="door door-left"></div>
-    <div class="door door-right"></div>
-    
-    <div class="door-seal">
-      <div class="seal-circle">S & M</div>
-      <h2 class="seal-title">We're Getting Married</h2>
-      <p class="seal-subtitle">Request the honour of your presence</p>
-      <button id="openDoorsBtn" class="open-btn">Tap to Open</button>
+  <!-- 3D Envelope Flap "Tap to Open" Cover -->
+  <div id="coverOverlay" class="cover-overlay">
+    <div class="envelope-card">
+      <div class="envelope-flap"></div>
+      
+      <div class="monogram-seal">T & A</div>
+      <h2 class="cover-couple">Tabinda & Adil</h2>
+      <p class="cover-sub">Request the honour of your presence</p>
+      <button id="tapOpenBtn" class="tap-open-btn">✦ Tap to Open ✦</button>
     </div>
   </div>
 
   <!-- Main Invitation Body -->
-  <main class="main-container">
-    <p class="header-subtitle">Together With Their Families</p>
-    <h1 class="couple-title">
-      Samir
-      <span class="and-sym">&</span>
-      Mehrunisa
+  <main class="main-wrapper">
+    <p class="section-eyebrow">Bismillah-ir-Rahman-ir-Rahim</p>
+    <h1 class="couple-main-title">
+      Tabinda
+      <span class="names-ampersand">&</span>
+      Adil
     </h1>
-    <div class="ornament">✦ ✦ ✦</div>
-    <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 320px; line-height: 1.5;">
-      Warmly invite you to share in the celebration of our union as we begin this new journey of love and grace.
+    <div class="ornament-divider">✦ ✦ ✦</div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 330px; line-height: 1.6;">
+      Together with our families, we invite you to share in our joy as we celebrate the sacred bond of our union.
     </p>
 
-    <!-- Scratch to Reveal Card -->
-    <div class="card-frame">
-      <p class="header-subtitle" style="margin-bottom: 5px;">Secret Revelation</p>
-      <p style="font-size: 0.75rem; color: var(--text-muted);">Scratch the gold seal below to uncover date & venue</p>
+    <!-- Scratch-to-Reveal Card -->
+    <div class="luxury-card">
+      <p class="section-eyebrow" style="margin-bottom: 4px;">Exclusive Reveal</p>
+      <p style="font-size: 0.75rem; color: var(--text-muted);">Scratch the golden card below to reveal the date</p>
 
-      <div class="scratch-wrapper">
-        <div class="scratch-secret">
-          <h4>You're Invited!</h4>
-          <div class="date">DECEMBER 18, 2026</div>
-          <p>Friday at 6:30 PM</p>
-          <p style="margin-top: 5px; color: var(--gold-primary); font-size: 0.75rem;">Grand Crystal Palace, Meerut</p>
+      <div class="scratch-box">
+        <div class="scratch-underlay">
+          <h4>Cordially Invited</h4>
+          <div class="event-date">DECEMBER 18, 2026</div>
+          <p>Friday Evening at 7:00 PM</p>
+          <p style="margin-top: 6px; color: var(--gold-primary); font-size: 0.76rem;">Grand Imperial Banquets</p>
         </div>
         <canvas id="scratchCanvas"></canvas>
       </div>
     </div>
 
     <!-- Countdown Timer -->
-    <div class="card-frame">
-      <p class="header-subtitle">Counting Down To Forever</p>
-      <div class="countdown-grid">
-        <div class="time-box">
-          <div id="days" class="time-num">00</div>
-          <div class="time-label">Days</div>
+    <div class="luxury-card">
+      <p class="section-eyebrow">Counting Down to Forever</p>
+      <div class="timer-container">
+        <div class="timer-cell">
+          <div id="days" class="timer-val">00</div>
+          <div class="timer-lbl">Days</div>
         </div>
-        <div class="time-box">
-          <div id="hours" class="time-num">00</div>
-          <div class="time-label">Hours</div>
+        <div class="timer-cell">
+          <div id="hours" class="timer-val">00</div>
+          <div class="timer-lbl">Hours</div>
         </div>
-        <div class="time-box">
-          <div id="mins" class="time-num">00</div>
-          <div class="time-label">Mins</div>
+        <div class="timer-cell">
+          <div id="mins" class="timer-val">00</div>
+          <div class="timer-lbl">Mins</div>
         </div>
-        <div class="time-box">
-          <div id="secs" class="time-num">00</div>
-          <div class="time-label">Secs</div>
+        <div class="timer-cell">
+          <div id="secs" class="timer-val">00</div>
+          <div class="timer-lbl">Secs</div>
         </div>
       </div>
     </div>
 
-    <!-- Program Timeline -->
-    <div class="card-frame">
-      <p class="header-subtitle">Program Timeline</p>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="event-title">Guest Welcome & Reception</div>
-          <div class="event-time">5:30 PM</div>
-          <div class="event-desc">Welcome drinks & traditional warm greetings.</div>
+    <!-- Event Timeline -->
+    <div class="luxury-card">
+      <p class="section-eyebrow">Celebration Program</p>
+      <div class="timeline-list">
+        <div class="timeline-row">
+          <div class="row-title">Baraat Arrival & Welcome</div>
+          <div class="row-time">7:00 PM</div>
+          <div class="row-desc">Warm reception and welcoming of the family.</div>
         </div>
-        <div class="timeline-item">
-          <div class="event-title">Wedding Ceremony</div>
-          <div class="event-time">7:00 PM</div>
-          <div class="event-desc">The sacred union and blessing exchange.</div>
+        <div class="timeline-row">
+          <div class="row-title">Nikah Ceremony</div>
+          <div class="row-time">8:00 PM</div>
+          <div class="row-desc">Exchange of vows and prayers of blessing.</div>
         </div>
-        <div class="timeline-item">
-          <div class="event-title">Royal Dinner & Festivities</div>
-          <div class="event-time">8:30 PM onwards</div>
-          <div class="event-desc">Grand feast, celebration, and photographs.</div>
+        <div class="timeline-row">
+          <div class="row-title">Royal Dinner & Festivities</div>
+          <div class="row-time">9:00 PM Onwards</div>
+          <div class="row-desc">Celebratory dinner feast and photographs.</div>
         </div>
       </div>
+    </div>
+
+    <!-- Venue Section -->
+    <div class="luxury-card">
+      <p class="section-eyebrow">Venue & Location</p>
+      <h3 style="font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1.1rem; margin-top: 6px;">Grand Imperial Banquets</h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Civil Lines, Ring Road, Main City</p>
+      <a href="https://maps.google.com" target="_blank" class="venue-btn">Open in Google Maps</a>
     </div>
   </main>
 
@@ -470,10 +506,10 @@
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
-    function toggleMusic() {
+    function toggleAudio() {
       if (bgMusic.paused) {
         bgMusic.play();
-        musicBtn.textContent = '⏸️';
+        musicBtn.textContent = '⏸️️';
         musicBtn.classList.add('playing');
       } else {
         bgMusic.pause();
@@ -481,15 +517,14 @@
         musicBtn.classList.remove('playing');
       }
     }
-    musicBtn.addEventListener('click', toggleMusic);
+    musicBtn.addEventListener('click', toggleAudio);
 
-    // --- 3D Door Open ---
-    const openDoorsBtn = document.getElementById('openDoorsBtn');
-    const doorWrapper = document.getElementById('doorWrapper');
+    // --- 3D Flap Open Animation ---
+    const tapOpenBtn = document.getElementById('tapOpenBtn');
+    const coverOverlay = document.getElementById('coverOverlay');
 
-    openDoorsBtn.addEventListener('click', () => {
-      doorWrapper.classList.add('opened');
-      // Trigger background music on door opening tap
+    tapOpenBtn.addEventListener('click', () => {
+      coverOverlay.classList.add('opened');
       if (bgMusic.paused) {
         bgMusic.play().then(() => {
           musicBtn.textContent = '⏸️';
@@ -502,107 +537,98 @@
     const canvas = document.getElementById('scratchCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
-    let isScratchedOff = false;
+    let isRevealed = false;
 
     function initCanvas() {
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
 
-      // Draw metallic gold surface
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, '#bf953f');
-      gradient.addColorStop(0.3, '#fcf6ba');
-      gradient.addColorStop(0.5, '#b38728');
-      gradient.addColorStop(0.8, '#fbf5b7');
-      gradient.addColorStop(1, '#aa771c');
+      // Realistic gold leaf texture
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#c5a059');
+      grad.addColorStop(0.3, '#fef3c7');
+      grad.addColorStop(0.6, '#b38728');
+      grad.addColorStop(0.9, '#fef08a');
+      grad.addColorStop(1, '#a16207');
 
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Gold pattern text
-      ctx.fillStyle = 'rgba(11, 19, 43, 0.4)';
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
       ctx.font = '600 13px Cinzel';
       ctx.textAlign = 'center';
-      ctx.fillText('✨ SCRATCH WITH FINGER ✨', canvas.width / 2, canvas.height / 2 + 5);
+      ctx.fillText('✦ SCRATCH TO REVEAL ✦', canvas.width / 2, canvas.height / 2 + 5);
     }
     window.addEventListener('load', initCanvas);
 
-    function getPos(e) {
+    function getCoords(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return { x: clientX - rect.left, y: clientY - rect.top };
     }
 
-    function scratch(e) {
-      if (!isDrawing || isScratchedOff) return;
+    function doScratch(e) {
+      if (!isDrawing || isRevealed) return;
       e.preventDefault();
-      const pos = getPos(e);
+      const p = getCoords(e);
 
       ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
-      ctx.arc(pos.x, pos.y, 22, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
       ctx.fill();
 
-      checkScratchedPercentage();
+      checkScratched();
     }
 
-    function checkScratchedPercentage() {
-      if (isScratchedOff) return;
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imgData.data;
-      let transparentCount = 0;
-
-      // Sample every 4th pixel for performance
-      for (let i = 3; i < pixels.length; i += 16) {
-        if (pixels[i] === 0) transparentCount++;
+    function checkScratched() {
+      if (isRevealed) return;
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let clearPixels = 0;
+      for (let i = 3; i < data.length; i += 16) {
+        if (data[i] === 0) clearPixels++;
       }
-
-      const totalSampled = pixels.length / 16;
-      if (transparentCount / totalSampled > 0.45) {
-        isScratchedOff = true;
+      if (clearPixels / (data.length / 16) > 0.45) {
+        isRevealed = true;
         canvas.style.transition = 'opacity 0.6s ease';
         canvas.style.opacity = '0';
         setTimeout(() => canvas.remove(), 600);
       }
     }
 
-    canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
-    canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; doScratch(e); });
+    canvas.addEventListener('mousemove', doScratch);
     window.addEventListener('mouseup', () => isDrawing = false);
 
-    canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, { passive: false });
-    canvas.addEventListener('touchmove', scratch, { passive: false });
+    canvas.addEventListener('touchstart', (e) => { isDrawing = true; doScratch(e); }, { passive: false });
+    canvas.addEventListener('touchmove', doScratch, { passive: false });
     window.addEventListener('touchend', () => isDrawing = false);
 
-    // --- Live Countdown Timer ---
-    const targetDate = new Date('2026-12-18T18:30:00').getTime();
+    // --- Countdown Timer ---
+    const targetTime = new Date('2026-12-18T19:00:00').getTime();
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
+    function renderCountdown() {
+      const remaining = targetTime - new Date().getTime();
+      if (remaining <= 0) {
         document.getElementById('days').innerText = '00';
         document.getElementById('hours').innerText = '00';
         document.getElementById('mins').innerText = '00';
         document.getElementById('secs').innerText = '00';
         return;
       }
-
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      const d = Math.floor(remaining / (1000 * 60 * 60 * 24));
+      const h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((remaining % (1000 * 60)) / 1000);
 
       document.getElementById('days').innerText = d < 10 ? '0' + d : d;
       document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
       document.getElementById('mins').innerText = m < 10 ? '0' + m : m;
       document.getElementById('secs').innerText = s < 10 ? '0' + s : s;
     }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    setInterval(renderCountdown, 1000);
+    renderCountdown();
   </script>
 </body>
 </html>
